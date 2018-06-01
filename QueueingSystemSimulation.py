@@ -18,8 +18,8 @@ class Packet:
         self.link = None
 
     def __str__(self):
-        return 'Packet in link {}; next event type {} at time {}'.format(str(self.link), str(self.next_event_type),
-                                                                         str(self.next_event_time))
+        return '(Packet in link {}; next event type {} at time {})'.format(self.link, self.next_event_type,
+                                                                           self.next_event_time)
 
 
 class Link:
@@ -40,9 +40,8 @@ class Link:
         self.final_blocking_probability = None
 
     def __str__(self):
-        return 'Link with mu={}; buffer {} and packet being served {}; {:d} total packets, {:d} dropped packets'.format(
-            str(self.mu), str(self.buffer), str(self.packet_being_served), self.num_packets_processed,
-            self.num_dropped_packets)
+        return '(Link with mu={}; buffer {} and packet being served {}; {:d} total packets, {:d} dropped packets)'.format(
+            self.mu, self.buffer, self.packet_being_served, self.num_packets_processed, self.num_dropped_packets)
 
     def add_packet(self, new_packet):
         """Adds a packet to the link or drops it."""
