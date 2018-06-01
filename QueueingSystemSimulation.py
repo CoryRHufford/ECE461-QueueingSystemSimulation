@@ -18,8 +18,7 @@ class Packet:
         self.link = None
 
     def __str__(self):
-        return '(Packet in link {}; next event type {} at time {})'.format(self.link, self.next_event_type,
-                                                                           self.next_event_time)
+        return '(Packet in link {}; next event type {} at time {})'.format(self.link, self.next_event_type, self.next_event_time)
 
 
 class Link:
@@ -40,8 +39,8 @@ class Link:
         self.final_blocking_probability = None
 
     def __str__(self):
-        return '(Link with mu={}; buffer {} and packet being served {}; {:d} total packets, {:d} dropped packets)'.format(
-            self.mu, self.buffer, self.packet_being_served, self.num_packets_processed, self.num_dropped_packets)
+        return '(Link with mu={}; buffer {} and packet being served {}; {:d} total packets, {:d} dropped packets)'\
+            .format(self.mu, self.buffer, self.packet_being_served, self.num_packets_processed, self.num_dropped_packets)
 
     def add_packet(self, new_packet):
         """Adds a packet to the link or drops it."""
@@ -65,8 +64,7 @@ class Link:
         """Moves the next packet from the buffer into service."""
         global current_simulation_time
 
-        self.total_time_spent_by_packets += self.packet_being_served.next_event_time \
-                                            - self.packet_being_served.arrival_time
+        self.total_time_spent_by_packets += self.packet_being_served.next_event_time - self.packet_being_served.arrival_time
         self.packet_being_served = None
         if len(self.buffer) > 0:
             # There's at least one packet in the buffer - move the next one into service
@@ -133,23 +131,20 @@ def add_event_to_event_list(event):
 
 def calculate_final_stats():
     """Calculates the final system performance stats."""
-    global final_simulation_time, final_num_packets_processed, final_num_packets_dropped, \
-        final_num_packets_transmitted, final_average_delay, final_blocking_probability, current_simulation_time, \
-        actual_start_time, num_packets_processed
+    global final_simulation_time, final_num_packets_processed, final_num_packets_dropped, final_num_packets_transmitted,\
+        final_average_delay, final_blocking_probability, current_simulation_time, actual_start_time, num_packets_processed
 
     final_simulation_time = current_simulation_time - actual_start_time
     final_num_packets_processed = num_packets_processed - num_packets_to_ignore
     final_num_packets_dropped = link1.num_dropped_packets + link2.num_dropped_packets
     final_num_packets_transmitted = final_num_packets_processed - final_num_packets_dropped
-    final_average_delay = (link1.total_time_spent_by_packets + link2.total_time_spent_by_packets) \
-                          / final_num_packets_processed
+    final_average_delay = (link1.total_time_spent_by_packets + link2.total_time_spent_by_packets) / final_num_packets_processed
     final_blocking_probability = final_num_packets_dropped / final_num_packets_processed
 
 
 def print_results():
-    global final_simulation_time, final_num_packets_processed, final_num_packets_dropped, \
-        final_num_packets_transmitted, final_average_delay, final_blocking_probability, num_packets_to_ignore, lambd, \
-        phi1, link1, link2
+    global final_simulation_time, final_num_packets_processed, final_num_packets_dropped, final_num_packets_transmitted,\
+        final_average_delay, final_blocking_probability, num_packets_to_ignore, lambd, phi1, link1, link2
 
     print('Actual arrivals processed: {:d}'.format(final_num_packets_processed))
     print('Transient-phase arrivals ignored: {:d}'.format(num_packets_to_ignore))
@@ -170,8 +165,7 @@ def print_results():
     print('       Total packet delay: {:f}'.format(link1.total_time_spent_by_packets))
     print('            Average delay: {:f}'.format(link1.final_average_delay))
     print('       Average throughput: {:f}'.format(link1.final_num_transmitted_packets / final_simulation_time))
-    print('Average number of packets: {:f}'.format(
-        phi1 * lambd * link1.final_average_delay * (1 - link1.final_blocking_probability)))
+    print('Average number of packets: {:f}'.format(phi1 * lambd * link1.final_average_delay * (1 - link1.final_blocking_probability)))
     print('')
     print(' --------------------- Link 2: -------------------- ')
     print('            Total packets: {:d}'.format(link2.num_packets_processed))
@@ -180,8 +174,7 @@ def print_results():
     print('       Total packet delay: {:f}'.format(link2.total_time_spent_by_packets))
     print('            Average delay: {:f}'.format(link2.final_average_delay))
     print('       Average throughput: {:f}'.format(link2.final_num_transmitted_packets / final_simulation_time))
-    print('Average number of packets: {:f}'.format(
-        (1 - phi1) * lambd * link2.final_average_delay * (1 - link2.final_blocking_probability)))
+    print('Average number of packets: {:f}'.format((1 - phi1) * lambd * link2.final_average_delay * (1 - link2.final_blocking_probability)))
 
 
 def save_results():
@@ -194,18 +187,12 @@ def save_results():
         file.write('{:d},{:d}\n'.format(final_num_packets_processed, num_packets_to_ignore))
 
         file.write('Perspective,Blocking probability,Average delay,Average throughput,Average number of packets\n')
-        file.write('System,{:f},{:f},{:f},{:f}\n'.format(final_blocking_probability, final_average_delay,
-                                                         final_num_packets_transmitted / final_simulation_time,
-                                                         lambd * final_average_delay * (
-                                                                 1 - final_blocking_probability)))
-        file.write('Link 1,{:f},{:f},{:f},{:f}\n'.format(link1.final_blocking_probability, link1.final_average_delay,
-                                                         link1.final_num_transmitted_packets / final_simulation_time,
-                                                         phi1 * lambd * link1.final_average_delay * (
-                                                                 1 - link1.final_blocking_probability)))
-        file.write('Link 2,{:f},{:f},{:f},{:f}\n'.format(link2.final_blocking_probability, link2.final_average_delay,
-                                                         link2.final_num_transmitted_packets / final_simulation_time,
-                                                         (1 - phi1) * lambd * link2.final_average_delay * (
-                                                                 1 - link2.final_blocking_probability)))
+        file.write('System,{:f},{:f},{:f},{:f}\n'.format(final_blocking_probability, final_average_delay, final_num_packets_transmitted / final_simulation_time,
+                                                         lambd * final_average_delay * (1 - final_blocking_probability)))
+        file.write('Link 1,{:f},{:f},{:f},{:f}\n'.format(link1.final_blocking_probability, link1.final_average_delay, link1.final_num_transmitted_packets / final_simulation_time,
+                                                         phi1 * lambd * link1.final_average_delay * (1 - link1.final_blocking_probability)))
+        file.write('Link 2,{:f},{:f},{:f},{:f}\n'.format(link2.final_blocking_probability, link2.final_average_delay, link2.final_num_transmitted_packets / final_simulation_time,
+                                                         (1 - phi1) * lambd * link2.final_average_delay * (1 - link2.final_blocking_probability)))
 
 
 # Simulation settings
